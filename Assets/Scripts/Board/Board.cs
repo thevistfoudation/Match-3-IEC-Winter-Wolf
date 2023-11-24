@@ -138,6 +138,58 @@ public class Board
     }
 
 
+    //internal void FillGapsWithNewItems()
+    //{
+    //    for (int x = 0; x < boardSizeX; x++)
+    //    {
+    //        for (int y = 0; y < boardSizeY; y++)
+    //        {
+    //            Cell cell = m_cells[x, y];
+    //            if (!cell.IsEmpty) continue;
+
+    //            NormalItem item = new NormalItem();
+
+    //            item.SetType(Utils.GetRandomNormalType());
+    //            item.SetView();
+    //            item.SetViewRoot(m_root);
+
+    //            cell.Assign(item);
+    //            cell.ApplyItemPosition(true);
+    //        }
+    //    }
+    //}
+
+    public Dictionary<NormalItem.eNormalType,int> ListTypeItem()
+    {
+        Dictionary<NormalItem.eNormalType, int> listItem = new Dictionary<NormalItem.eNormalType, int>();
+        for (int x = 0; x < boardSizeX; x++)
+        {
+            for (int y = 0; y < boardSizeY; y++)
+            {
+                Cell cell = m_cells[x, y];
+                NormalItem item = cell.Item as NormalItem;
+
+                if(item != null)
+                {
+                    if (listItem.ContainsKey(item.ItemType))
+                    {
+                        listItem[item.ItemType] += 1;
+                    }
+                    else
+                    {
+                        listItem.Add(item.ItemType, 1);
+                    }
+                }
+
+                
+               
+            }
+        }
+
+        return listItem;
+    }
+
+
     internal void FillGapsWithNewItems()
     {
         for (int x = 0; x < boardSizeX; x++)
@@ -149,12 +201,80 @@ public class Board
 
                 NormalItem item = new NormalItem();
 
-                item.SetType(Utils.GetRandomNormalType());
+                List<NormalItem.eNormalType> types = new List<NormalItem.eNormalType>();
+
+                if (cell.NeighbourBottom != null)
+                {
+                    NormalItem nitem = cell.NeighbourBottom.Item as NormalItem;
+                    if (nitem != null)
+                    {
+                        types.Add(nitem.ItemType);
+                    }
+                }
+
+                if (cell.NeighbourLeft != null)
+                {
+                    NormalItem nitem = cell.NeighbourLeft.Item as NormalItem;
+                    if (nitem != null)
+                    {
+                        types.Add(nitem.ItemType);
+                    }
+                }
+
+                if (cell.NeighbourRight != null)
+                {
+                    NormalItem nitem = cell.NeighbourRight.Item as NormalItem;
+                    if (nitem != null)
+                    {
+                        types.Add(nitem.ItemType);
+                    }
+                }
+
+                if (cell.NeighbourUp != null)
+                {
+                    NormalItem nitem = cell.NeighbourUp.Item as NormalItem;
+                    if (nitem != null)
+                    {
+                        types.Add(nitem.ItemType);
+                    }
+                }
+
+                var listItemCount = ListTypeItem();
+                var listItemAvaiable = Utils.GetListNormalItem(types.ToArray());
+                var listKey = listItemCount.Keys.ToList();
+
+                for (int i = 0; i < listKey.Count; i++)
+                {
+                    if (!listItemAvaiable.Contains(listKey[i]))
+                    {
+                        listItemCount.Remove(listKey[i]);
+                    }
+                }
+
+               
+
+                var listKey2 = listItemCount.Keys.ToList();
+                NormalItem.eNormalType smallestValueKey = NormalItem.eNormalType.TYPE_ONE;
+
+
+               
+                var smallestValue = listItemCount.Min(x => x.Value);
+
+                for (int i = 0; i < listItemCount.Count; i++)
+                {
+                    if (smallestValue == listItemCount[listKey2[i]])
+                    {
+                        smallestValueKey = listKey2[i];
+                    }
+                }
+                item.SetType(smallestValueKey);
                 item.SetView();
                 item.SetViewRoot(m_root);
 
                 cell.Assign(item);
-                cell.ApplyItemPosition(true);
+                cell.ApplyItemPosition(false);
+
+
             }
         }
     }
