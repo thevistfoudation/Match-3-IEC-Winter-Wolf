@@ -13,19 +13,28 @@ public class Item
     public Transform View { get; private set; }
 
 
+
     public virtual void SetView()
     {
         string prefabname = GetPrefabName();
+        Sprite spriteImage = GetSprite(prefabname);
 
         if (!string.IsNullOrEmpty(prefabname))
         {
             GameObject prefab = Resources.Load<GameObject>(prefabname);
             if (prefab)
             {
+                prefab.GetComponent<SpriteRenderer>().sprite = spriteImage;
                 var gb =  SmartPool.Instance.Spawn(prefab.gameObject, prefab.transform.position, prefab.transform.rotation);
                 View = gb.transform;
             }
         }
+
+    }
+
+    protected virtual Sprite GetSprite(string name)
+    {
+        return null;
     }
 
     protected virtual string GetPrefabName() { return string.Empty; }

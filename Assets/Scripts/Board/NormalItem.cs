@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NormalItem : Item
 {
+
     public enum eNormalType
     {
         TYPE_ONE,
@@ -20,6 +21,25 @@ public class NormalItem : Item
     public void SetType(eNormalType type)
     {
         ItemType = type;
+    }
+
+
+
+    protected override Sprite GetSprite(string name)
+    {
+        Sprite prefabImage = null;
+        var itemInformation = Resources.Load<ItemInformation>("itemInforData");
+      
+        for(int i = 0; i < itemInformation.listItemConfig.Count; i++)
+        {
+            if (name == itemInformation.listItemConfig[i].name)
+            {
+                prefabImage = itemInformation.listItemConfig[i].image;
+                return prefabImage;
+            }
+        }
+
+        return prefabImage;
     }
 
     protected override string GetPrefabName()
