@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     private const int TargetFrameRate = 60;
     public event Action<eStateGame> StateChangedAction = delegate { };
-
+    public eLevelMode currentMode;
     public void SetForcedFrameRate()
     {
         QualitySettings.vSyncCount = 0;

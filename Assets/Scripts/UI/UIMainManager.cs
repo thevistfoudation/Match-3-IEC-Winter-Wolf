@@ -109,6 +109,7 @@ public class UIMainManager : MonoBehaviour
         Application.backgroundLoadingPriority = ThreadPriority.BelowNormal;
         Resources.UnloadUnusedAssets();
         GC.Collect();
+        m_gameManager.currentMode = GameManager.eLevelMode.MOVES;
         m_gameManager.LoadLevel(GameManager.eLevelMode.MOVES);
     }
 
@@ -117,7 +118,17 @@ public class UIMainManager : MonoBehaviour
         Application.backgroundLoadingPriority = ThreadPriority.BelowNormal;
         Resources.UnloadUnusedAssets();
         GC.Collect();
+        m_gameManager.currentMode = GameManager.eLevelMode.TIMER;
         m_gameManager.LoadLevel(GameManager.eLevelMode.TIMER);
+    }
+
+    public void ReloadCurrentScene()
+    {
+        m_gameManager.ClearLevel();
+        Application.backgroundLoadingPriority = ThreadPriority.BelowNormal;
+        Resources.UnloadUnusedAssets();
+        GC.Collect();
+        m_gameManager.LoadLevel(m_gameManager.currentMode);
     }
 
     internal void ShowGameMenu()
